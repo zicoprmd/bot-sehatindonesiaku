@@ -75,6 +75,14 @@ try:
 except:
     print("ℹ️ CKG Umum tidak muncul / sudah aktif")
 
+# menu_daftarkan = wait.until(
+#     EC.element_to_be_clickable(
+#         (By.XPATH, "//*[@id='menu_cari/daftarkan_individu']/div")
+#     )
+# )
+# menu_daftarkan.click()
+
+time.sleep(1)
 menu_pelayanan = wait.until(
     EC.element_to_be_clickable(
         (By.XPATH, "//*[@id='menu_pelayanan']/div")
@@ -82,6 +90,8 @@ menu_pelayanan = wait.until(
 )
 menu_pelayanan.click()
 
+
+time.sleep(3)
 #clik simpan
 try:
     simpan_btn = wait.until(
@@ -92,14 +102,14 @@ try:
     simpan_btn.click()
     print("✅ simpan diklik")
 except:
-    print("ℹ️ CKG Umum tidak muncul / sudah aktif")
+    print("ℹ️ simpan tidak muncul / sudah aktif")
 
 # ===== BACA EXCEL =====
 df = pd.read_excel("datasehat.xlsx", sheet_name="data")
 
 # ===== AMBIL BARIS PERTAMA DULU (TEST) =====
-ckg = 12
-nama = str(df.loc[ckg, "nama"])
+ckg = 1
+nama = str(df.loc[ckg, "nama"]).upper()
 
 print("NAMA dari Excel:", nama)
 
@@ -144,8 +154,8 @@ def klik_mulai_berdasarkan_nama(nama):
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    f"//tr[.//td[contains(., '{nama}')]]"
-                    f"//button[.//text()[contains(., 'Mulai')]]"
+                    f"//tr[.//td[normalize-space()='{nama}']]"
+                    f"//button[.//div[normalize-space()='Mulai']]"
                 )
             )
         )
@@ -167,159 +177,73 @@ def klik_mulai_berdasarkan_nama(nama):
         print(f"❌ Gagal klik Mulai untuk {nama}")
         return False
 
+time.sleep(0.5)
 klik_mulai_berdasarkan_nama(nama)
 
-def klik_tombol_jika_ada(teks_tombol):
+#NAMALAYANAN SKRINING
+def klik_inputdata_jika_ada(nama_layanan):
     try:
         btn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    f"//button[.//text()[contains(., '{teks_tombol}')]]"
+                    f"//tr[.//td[contains(., '{nama_layanan}')]]//button[contains(., 'Input Data')]"
                 )
             )
         )
-
-        driver.execute_script(
-            "arguments[0].scrollIntoView({block:'center'});", btn
-        )
-
-        ActionChains(driver)\
-            .move_to_element(btn)\
-            .pause(0.2)\
-            .click()\
-            .perform()
-
-        print(f"✅ Tombol '{teks_tombol}' diklik")
+        btn.click()
+        print(f"✅ Input Data '{nama_layanan}' diklik")
 
         return True
 
     except:
-        print(f"ℹ️ Tombol '{teks_tombol}' tidak muncul / sudah dilewati")
+        print(f"ℹ️ Tombol '{nama_layanan}' tidak muncul / sudah dilewati")
         return False
 
-klik_tombol_jika_ada("Mulai Pemeriksaan")
+klik_inputdata_jika_ada("Tingkat Aktivitas Fisik (sedang dan berat)")
 
-#KIRIMBUTTON
-def klik_kirim():
-    try:
-        kirim_btn = WebDriverWait(driver, 2).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//*[@id='sv-nav-complete']//input[@type='button']")
+time.sleep(1)
+def pilih_dropdown_surveyjs_by_text(question_id, option_text):
+
+    # klik dropdown
+    dropdown = WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable((By.ID, question_id))
+    )
+
+    driver.execute_script(
+        "arguments[0].scrollIntoView({block:'center'});", dropdown
+    )
+    dropdown.click()
+
+    # tunggu list khusus dropdown ini muncul
+    list_id = f"{question_id}_list"
+
+    option = WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable(
+            (
+                By.XPATH,
+                f"//ul[@id='{list_id}']//li[@role='option']"
+                f"[.//div[normalize-space()='{option_text}']]"
             )
         )
-        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", kirim_btn)
-        driver.execute_script("arguments[0].click();", kirim_btn)
-        print("✅ Form dikirim")
-        return True
-    except:
-        print("ℹ️ Tombol kirim tidak muncul / sudah dilewati")
-        return False
+    )
 
-#gizi BB-TB-LP
-def klik_input_data_by_row(row_id):
-    try :
-        btn = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable(
-                (
-                    By.XPATH,
-                    f"//div[@id='{row_id}']//button"
-                )
-            )
-        )
+    option.click()
 
-        driver.execute_script(
-            "arguments[0].scrollIntoView({block:'center'});", btn
-        )
-
-        ActionChains(driver).move_to_element(btn).click().perform()
-
-        print(f"✅ Input Data diklik ({row_id})")
-        return True
-    except:
-        print(f"ℹ️ Input tidak bisa diisi ({row_id})")
-        return False
-
-#RADIOSRUVEYJS
-def klik_radio_surveyjs_by_value(value):
-    try:
-        label = WebDriverWait(driver, 4).until(
-            EC.visibility_of_element_located(
-                (
-                    By.XPATH,
-                    f"//label[contains(@class,'sd-selectbase__label')][.//input[@value='{value}']]"
-                )
-            )
-        )
-
-        driver.execute_script(
-            "arguments[0].scrollIntoView({block:'center'});", label
-        )
-
-        ActionChains(driver)\
-            .move_to_element(label)\
-            .pause(0.2)\
-            .click()\
-            .perform()
-
-        print(f"✅ Radio dengan value {value} sudah diklik")
-        return True
-    except:
-        print(f"ℹ️ Tombol {value} tidak muncul / sudah dilewati")
-        return False
-
-#INPUTFORMMMMM
-klik_input_data_by_row("rowfrm000051")
-
-def normalize_number(val):
-    return str(val).replace(",", ".")
-
-def isi_input_text_surveyjs(xpath_input, nilai):
-    try:
-        nilai = normalize_number(nilai)
-
-        field = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, xpath_input))
-        )
-
-        driver.execute_script(
-            "arguments[0].scrollIntoView({block:'center'});", field
-        )
-
-        field.click()
-        field.clear()
-        field.send_keys(nilai)
-        field.send_keys(Keys.TAB)
-
-        print(f"✅ Input (SurveyJS) diisi & committed: {nilai}")
-        return True
-    except:
-        print(f"ℹ️ Input tidak bisa diisi")
-        return False
+    print(f"✅ Dropdown {question_id} dipilih: {option_text}")
 
 
-isi_input_text_surveyjs("//*[@id='sq_100i']", df.loc[ckg, "BB"])   # berat badan
-time.sleep(0.3)
-isi_input_text_surveyjs("//*[@id='sq_101i']", df.loc[ckg, "TB"])   # tinggi badan
-time.sleep(0.3)
-isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[ckg, "LP"])   # lingkar perut
-time.sleep(0.3)
-klik_kirim()
-time.sleep(3)
-
-
-klik_input_data_by_row("rowfrm000256")
-klik_radio_surveyjs_by_value("PPV00000328")
-isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[ckg, "GDS"])
-klik_kirim()
-time.sleep(3)
-
-klik_input_data_by_row("rowfrm000265")
-klik_radio_surveyjs_by_value("PPV00000380")
-isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[ckg, "sistol"])
-isi_input_text_surveyjs("//*[@id='sq_103i']", df.loc[ckg, "diastol"])
-klik_kirim()
-time.sleep(3)
+pilih_dropdown_surveyjs_by_text("sq_100i", "Tidak")
+time.sleep(1)
+pilih_dropdown_surveyjs_by_text("sq_103i", "Tidak")
+time.sleep(1)
+pilih_dropdown_surveyjs_by_text("sq_106i", "Tidak")
+time.sleep(1)
+pilih_dropdown_surveyjs_by_text("sq_109i", "Tidak")
+time.sleep(1)
+pilih_dropdown_surveyjs_by_text("sq_112i", "Tidak")
+time.sleep(1)
+pilih_dropdown_surveyjs_by_text("sq_115i", "Tidak")
 
 
 
