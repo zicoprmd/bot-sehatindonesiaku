@@ -1,4 +1,5 @@
 from selenium import webdriver
+from pathlib import Path
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,16 +14,16 @@ from selenium.webdriver.common.action_chains import ActionChains
 # KONFIGURASI EDGE PROFILE
 # ==============================
 edge_options = Options()
+edge_profile = Path.home() / "AppData/Local/Microsoft/Edge/User Data"
 edge_options.add_argument(
-    r"--user-data-dir=C:\Users\ThinkPad\AppData\Local\Microsoft\Edge\User Data"
-)
+    f"--user-data-dir={edge_profile}")
 edge_options.add_argument("--profile-directory=Default")
 
 # ==============================
 # START EDGE
 # ==============================
 driver = webdriver.Edge(options=edge_options)
-wait = WebDriverWait(driver, 1000)
+wait = WebDriverWait(driver, 5)
 
 # ==============================
 # BUKA WEBSITE
@@ -575,6 +576,6 @@ for i in range(len(df)):
 input(
     "\nBrowser siap.\n"
     "Session aktif.\n"
-    "Tekan ENTER untuk lanjut ke step berikutnya (radio / form)..."
+    "Tekan ENTER untuk lanjut ke step berikutnya (radio / form)...\n"
     "KALAU MUNCUL INI SEBENERNYA TANDA UDAH SELESAI SI"
 )
