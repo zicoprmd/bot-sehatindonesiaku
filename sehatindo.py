@@ -1,5 +1,4 @@
 from selenium import webdriver
-from pathlib import Path
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,9 +13,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 # KONFIGURASI EDGE PROFILE
 # ==============================
 edge_options = Options()
-edge_profile = Path.home() / "AppData/Local/Microsoft/Edge/User Data"
 edge_options.add_argument(
-    f"--user-data-dir={edge_profile}")
+    r"--user-data-dir=C:\Users\ThinkPad\AppData\Local\Microsoft\Edge\User Data"
+)
 edge_options.add_argument("--profile-directory=Default")
 
 # ==============================
@@ -87,7 +86,7 @@ nama = str(df.loc[i, "nama"]).upper()
 print("NAMA dari Excel:", nama)
 
 # ===== TUNGGU INPUT MUNCUL =====
-wait = WebDriverWait(driver, 1000)
+
 
 def cari_pasien(nama):
     input_nama = WebDriverWait(driver, 5).until(
@@ -112,14 +111,22 @@ def cari_pasien(nama):
     )
 
 #==================MULAI BERDASARKAN NAMA SETELAH SEARCH
+def xpath_literal(s):
+    if "'" not in s:
+        return f"'{s}'"
+    if '"' not in s:
+        return f'"{s}"'
+    return "concat('" + s.replace("'", "',\"'\",'") + "')"
+
 def klik_mulai_berdasarkan_nama(nama):
     try:
+        nama_xpath = xpath_literal(nama)
+
         btn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    f"//tr[.//td[normalize-space()='{nama}']]"
-                    f"//button[.//div[normalize-space()='Mulai']]"
+                    "//table//tr[1]//button[.//div[normalize-space()='Mulai']]"
                 )
             )
         )
@@ -535,6 +542,7 @@ for i in range(len(df)):
         print(f"\n==== PROSES PASIEN: {nama} ====")
 
         cari_pasien(nama)
+        time.sleep(1)
         
         if not klik_mulai_berdasarkan_nama(nama):
             print("⛔ Tidak bisa klik Mulai")
@@ -562,6 +570,7 @@ for i in range(len(df)):
         klik_tombol_jika_ada("Konfirmasi")
 
         print(f"✅ Semua layanan selesai untuk {nama}")
+        time.sleep(1)
         klik_back_ke_layanan()
 
     except Exception as e:
