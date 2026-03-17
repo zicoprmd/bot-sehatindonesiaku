@@ -1,0 +1,181 @@
+2026-03-16 14:02:04,944 - INFO - \u2705 CKG Umum diklik
+2026-03-16 14:02:13,633 - INFO - \u2705 Checkbox 'Lokasi sama dengan puskesmas' dicentang
+2026-03-16 14:02:14,781 - INFO - \u2705 simpan diklik
+2026-03-16 14:02:14,998 - INFO - 
+===== PASIEN 1/3 =====
+2026-03-16 14:02:14,998 - INFO - \U0001f464 RIYAN ADRIAN WIBISONO
+2026-03-16 14:02:15,343 - INFO - \U0001f50e Mencari pasien: RIYAN ADRIAN WIBISONO
+2026-03-16 14:02:21,671 - INFO - \u274c Gagal klik Mulai untuk RIYAN ADRIAN WIBISONO
+2026-03-16 14:02:21,672 - INFO - \u26d4 Tidak bisa klik Mulai
+2026-03-16 14:02:21,672 - INFO - 
+===== PASIEN 2/3 =====
+2026-03-16 14:02:21,679 - INFO - \U0001f464 MAKSUDI
+2026-03-16 14:02:21,994 - INFO - \U0001f50e Mencari pasien: MAKSUDI
+2026-03-16 14:02:23,606 - INFO - \u2705 Tombol Mulai diklik untuk MAKSUDI
+2026-03-16 14:02:25,242 - INFO - \u2705 Tombol 'Mulai Pemeriksaan' diklik
+2026-03-16 14:02:31,537 - INFO - \u2139\ufe0f Tombol 'Demografi Dewasa Perempuan' tidak muncul / sudah dilewati
+2026-03-16 14:02:36,813 - INFO - \u2139\ufe0f Tombol 'Demografi Lansia' tidak muncul / sudah dilewati
+2026-03-16 14:02:38,446 - INFO - \u2705 Input Data 'Demografi Dewasa Laki-Laki' diklik
+2026-03-16 14:02:39,541 - INFO - \u2705 Status Perkawinan \u2192 Menikah
+2026-03-16 14:02:41,724 - INFO - \u2139\ufe0f Tombol 'Apakah Anda sedang hamil' tidak muncul / sudah dilewati
+2026-03-16 14:02:41,804 - INFO - \u2705 Apakah Anda penyandang disabilitas? \u2192 Non disabilitas
+2026-03-16 14:02:41,894 - INFO - \u2705 Form dikirim
+2026-03-16 14:02:46,895 - INFO - \u2139\ufe0f Tombol 'Faktor Risiko Kanker Usus' tidak muncul / sudah dilewati
+2026-03-16 14:02:49,045 - INFO - \u2139\ufe0f Tombol 'kanker kolorektal' tidak muncul / sudah dilewati
+2026-03-16 14:02:52,224 - INFO - \u2139\ufe0f Tombol PPV00000538 tidak muncul / sudah dilewati
+2026-03-16 14:02:54,338 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:02:55,885 - INFO - \u2705 Input Data 'Faktor Risiko TB - Dewasa & Lansia' diklik
+2026-03-16 14:02:57,266 - INFO - \u2705 Radio dengan value PPV00000883 sudah diklik
+2026-03-16 14:02:57,358 - INFO - \u2705 Form dikirim
+2026-03-16 14:03:01,942 - INFO - \u2705 Input Data 'Hati' diklik
+2026-03-16 14:03:03,575 - INFO - \u2705 Radio dengan value PPV00000350 sudah diklik
+2026-03-16 14:03:04,166 - INFO - \u2705 Radio dengan value PPV00000352 sudah diklik
+2026-03-16 14:03:04,742 - INFO - \u2705 Radio dengan value PPV00000354 sudah diklik
+2026-03-16 14:03:05,337 - INFO - \u2705 Radio dengan value PPV00000356 sudah diklik
+2026-03-16 14:03:05,920 - INFO - \u2705 Radio dengan value PPV00000358 sudah diklik
+2026-03-16 14:03:06,495 - INFO - \u2705 Radio dengan value PPV00000360 sudah diklik
+2026-03-16 14:03:07,072 - INFO - \u2705 Radio dengan value PPV00000362 sudah diklik
+2026-03-16 14:03:07,681 - INFO - \u2705 Radio dengan value PPV00000449 sudah diklik
+2026-03-16 14:03:08,275 - INFO - \u2705 Radio dengan value PPV00000463 sudah diklik
+2026-03-16 14:03:08,400 - INFO - \u2705 Form dikirim
+2026-03-16 14:03:13,464 - INFO - \u2139\ufe0f Tombol 'Kanker Leher Rahim' tidak muncul / sudah dilewati
+2026-03-16 14:03:16,643 - INFO - \u2139\ufe0f Tombol PPV00000346 tidak muncul / sudah dilewati
+2026-03-16 14:03:18,780 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:03:20,019 - INFO - \u2705 Input Data 'Kesehatan Jiwa' diklik
+2026-03-16 14:03:21,372 - INFO - \u2705 Radio dengan value PPV00000381 sudah diklik
+2026-03-16 14:03:21,974 - INFO - \u2705 Radio dengan value PPV00000382 sudah diklik
+2026-03-16 14:03:22,591 - INFO - \u2705 Radio dengan value PPV00000383 sudah diklik
+2026-03-16 14:03:23,186 - INFO - \u2705 Radio dengan value PPV00000384 sudah diklik
+2026-03-16 14:03:23,292 - INFO - \u2705 Form dikirim
+2026-03-16 14:03:28,604 - INFO - \u2139\ufe0f Tombol 'Penapisan Risiko Kanker Paru' tidak muncul / sudah dilewati
+2026-03-16 14:03:31,781 - INFO - \u2139\ufe0f Tombol PPV00001025 tidak muncul / sudah dilewati
+2026-03-16 14:03:34,941 - INFO - \u2139\ufe0f Tombol PPV00001027 tidak muncul / sudah dilewati
+2026-03-16 14:03:38,138 - INFO - \u2139\ufe0f Tombol PPV00001029 tidak muncul / sudah dilewati
+2026-03-16 14:03:41,322 - INFO - \u2139\ufe0f Tombol PPV00000737 tidak muncul / sudah dilewati
+2026-03-16 14:03:44,503 - INFO - \u2139\ufe0f Tombol PPV00001031 tidak muncul / sudah dilewati
+2026-03-16 14:03:47,696 - INFO - \u2139\ufe0f Tombol PPV00001033 tidak muncul / sudah dilewati
+2026-03-16 14:03:49,833 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:03:51,116 - INFO - \u2705 Input Data 'Perilaku Merokok' diklik
+2026-03-16 14:03:52,563 - INFO - \u2705 Radio dengan value PPV00000365 sudah diklik
+2026-03-16 14:03:53,677 - INFO - \u2705 Radio dengan value PPV00000426 sudah diklik
+2026-03-16 14:03:54,299 - INFO - \u2705 Radio dengan value PPV00000438 sudah diklik
+2026-03-16 14:03:54,406 - INFO - \u2705 Form dikirim
+2026-03-16 14:03:59,753 - INFO - \u2139\ufe0f Tombol 'Tingkat Aktivitas Fisik (sedang dan berat)' tidak muncul / sudah dilewati
+2026-03-16 14:04:05,624 - INFO - !\u2139\ufe0f Dropdown sq_100i tidak terpilih: Tidak
+2026-03-16 14:04:11,893 - INFO - !\u2139\ufe0f Dropdown sq_103i tidak terpilih: Tidak
+2026-03-16 14:04:17,509 - INFO - \u2705 Dropdown sq_106i dipilih: Tidak
+2026-03-16 14:04:18,893 - INFO - \u2705 Dropdown sq_109i dipilih: Tidak
+2026-03-16 14:04:21,264 - INFO - !\u2139\ufe0f Dropdown sq_112i tidak terpilih: Tidak
+2026-03-16 14:04:22,672 - INFO - \u2705 Dropdown sq_115i dipilih: Tidak
+2026-03-16 14:04:22,736 - INFO - \u2705 Form dikirim
+2026-03-16 14:04:31,027 - INFO - \u2139\ufe0f Input tidak bisa diisi (rowfrm000051)
+2026-03-16 14:04:33,371 - INFO - \u2705 Input Data diklik (rowfrm000093)
+2026-03-16 14:04:35,813 - INFO - \u2705 Input (SurveyJS) diisi & committed: 60
+2026-03-16 14:04:36,566 - INFO - \u2705 Input (SurveyJS) diisi & committed: 160
+2026-03-16 14:04:37,361 - INFO - \u2705 Input (SurveyJS) diisi & committed: 84
+2026-03-16 14:04:37,753 - INFO - \u2705 Form dikirim
+2026-03-16 14:04:40,754 - INFO - \u2714 BB TB LP selesai
+2026-03-16 14:04:42,738 - INFO - \u2705 Input Data diklik (rowfrm000256)
+2026-03-16 14:04:44,195 - INFO - \u2705 Radio dengan value PPV00000328 sudah diklik
+2026-03-16 14:04:44,765 - INFO - \u2705 Input (SurveyJS) diisi & committed: 84
+2026-03-16 14:04:44,867 - INFO - \u2705 Form dikirim
+2026-03-16 14:04:47,868 - INFO - \u2714 gula darah selesai
+2026-03-16 14:04:50,024 - INFO - \u2705 Input Data diklik (rowfrm000265)
+2026-03-16 14:04:51,428 - INFO - \u2705 Radio dengan value PPV00000380 sudah diklik
+2026-03-16 14:04:51,958 - INFO - \u2705 Input (SurveyJS) diisi & committed: 120
+2026-03-16 14:04:52,338 - INFO - \u2705 Input (SurveyJS) diisi & committed: 80
+2026-03-16 14:04:52,439 - INFO - \u2705 Form dikirim
+2026-03-16 14:04:55,440 - INFO - \u2714 Tekanan Darah selesai
+2026-03-16 14:04:56,478 - INFO - \u2705 Tombol 'Selesaikan Layanan' diklik
+2026-03-16 14:04:57,085 - INFO - \u2705 Tombol 'Konfirmasi' diklik
+2026-03-16 14:04:57,759 - INFO - \U0001f519 Kembali ke daftar layanan
+2026-03-16 14:04:57,760 - INFO - \u2705 Pasien selesai
+2026-03-16 14:04:57,761 - INFO - 
+===== PASIEN 3/3 =====
+2026-03-16 14:04:57,762 - INFO - \U0001f464 TIYA SETIYA
+2026-03-16 14:04:58,776 - INFO - \U0001f50e Mencari pasien: TIYA SETIYA
+2026-03-16 14:05:00,406 - INFO - \u2705 Tombol Mulai diklik untuk TIYA SETIYA
+2026-03-16 14:05:01,640 - INFO - \u2705 Tombol 'Mulai Pemeriksaan' diklik
+2026-03-16 14:05:03,918 - INFO - \u2705 Input Data 'Demografi Dewasa Perempuan' diklik
+2026-03-16 14:05:09,402 - INFO - \u2139\ufe0f Tombol 'Demografi Lansia' tidak muncul / sudah dilewati
+2026-03-16 14:05:14,670 - INFO - \u2139\ufe0f Tombol 'Demografi Dewasa Laki-Laki' tidak muncul / sudah dilewati
+2026-03-16 14:05:14,766 - INFO - \u2705 Status Perkawinan \u2192 Menikah
+2026-03-16 14:05:14,847 - INFO - \u2705 Apakah Anda sedang hamil \u2192 Tidak
+2026-03-16 14:05:14,919 - INFO - \u2705 Apakah Anda penyandang disabilitas? \u2192 Non disabilitas
+2026-03-16 14:05:15,002 - INFO - \u2705 Form dikirim
+2026-03-16 14:05:20,347 - INFO - \u2139\ufe0f Tombol 'Faktor Risiko Kanker Usus' tidak muncul / sudah dilewati
+2026-03-16 14:05:22,492 - INFO - \u2139\ufe0f Tombol 'kanker kolorektal' tidak muncul / sudah dilewati
+2026-03-16 14:05:25,672 - INFO - \u2139\ufe0f Tombol PPV00000538 tidak muncul / sudah dilewati
+2026-03-16 14:05:27,805 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:05:30,967 - INFO - \u2705 Input Data 'Faktor Risiko TB - Dewasa & Lansia' diklik
+2026-03-16 14:05:32,481 - INFO - \u2705 Radio dengan value PPV00000883 sudah diklik
+2026-03-16 14:05:32,571 - INFO - \u2705 Form dikirim
+2026-03-16 14:05:37,111 - INFO - \u2705 Input Data 'Hati' diklik
+2026-03-16 14:05:38,747 - INFO - \u2705 Radio dengan value PPV00000350 sudah diklik
+2026-03-16 14:05:39,346 - INFO - \u2705 Radio dengan value PPV00000352 sudah diklik
+2026-03-16 14:05:39,962 - INFO - \u2705 Radio dengan value PPV00000354 sudah diklik
+2026-03-16 14:05:40,565 - INFO - \u2705 Radio dengan value PPV00000356 sudah diklik
+2026-03-16 14:05:41,157 - INFO - \u2705 Radio dengan value PPV00000358 sudah diklik
+2026-03-16 14:05:41,769 - INFO - \u2705 Radio dengan value PPV00000360 sudah diklik
+2026-03-16 14:05:42,372 - INFO - \u2705 Radio dengan value PPV00000362 sudah diklik
+2026-03-16 14:05:42,971 - INFO - \u2705 Radio dengan value PPV00000449 sudah diklik
+2026-03-16 14:05:43,574 - INFO - \u2705 Radio dengan value PPV00000463 sudah diklik
+2026-03-16 14:05:43,685 - INFO - \u2705 Form dikirim
+2026-03-16 14:05:48,697 - INFO - \u2139\ufe0f Tombol 'Kanker Leher Rahim' tidak muncul / sudah dilewati
+2026-03-16 14:05:51,876 - INFO - \u2139\ufe0f Tombol PPV00000346 tidak muncul / sudah dilewati
+2026-03-16 14:05:54,016 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:05:55,368 - INFO - \u2705 Input Data 'Kesehatan Jiwa' diklik
+2026-03-16 14:05:56,730 - INFO - \u2705 Radio dengan value PPV00000381 sudah diklik
+2026-03-16 14:05:57,349 - INFO - \u2705 Radio dengan value PPV00000382 sudah diklik
+2026-03-16 14:05:57,972 - INFO - \u2705 Radio dengan value PPV00000383 sudah diklik
+2026-03-16 14:05:58,568 - INFO - \u2705 Radio dengan value PPV00000384 sudah diklik
+2026-03-16 14:05:58,669 - INFO - \u2705 Form dikirim
+2026-03-16 14:06:04,189 - INFO - \u2139\ufe0f Tombol 'Penapisan Risiko Kanker Paru' tidak muncul / sudah dilewati
+2026-03-16 14:06:07,363 - INFO - \u2139\ufe0f Tombol PPV00001025 tidak muncul / sudah dilewati
+2026-03-16 14:06:10,541 - INFO - \u2139\ufe0f Tombol PPV00001027 tidak muncul / sudah dilewati
+2026-03-16 14:06:13,724 - INFO - \u2139\ufe0f Tombol PPV00001029 tidak muncul / sudah dilewati
+2026-03-16 14:06:16,906 - INFO - \u2139\ufe0f Tombol PPV00000737 tidak muncul / sudah dilewati
+2026-03-16 14:06:20,085 - INFO - \u2139\ufe0f Tombol PPV00001031 tidak muncul / sudah dilewati
+2026-03-16 14:06:23,276 - INFO - \u2139\ufe0f Tombol PPV00001033 tidak muncul / sudah dilewati
+2026-03-16 14:06:25,408 - INFO - \u2139\ufe0f Tombol kirim tidak muncul / sudah dilewati
+2026-03-16 14:06:26,385 - INFO - \u2705 Input Data 'Perilaku Merokok' diklik
+2026-03-16 14:06:26,982 - INFO - \u2705 Radio dengan value PPV00000365 sudah diklik
+2026-03-16 14:06:28,103 - INFO - \u2705 Radio dengan value PPV00000426 sudah diklik
+2026-03-16 14:06:28,718 - INFO - \u2705 Radio dengan value PPV00000438 sudah diklik
+2026-03-16 14:06:28,790 - INFO - \u2705 Form dikirim
+2026-03-16 14:06:31,655 - INFO - \u2705 Input Data 'Tingkat Aktivitas Fisik (sedang dan berat)' diklik
+2026-03-16 14:06:32,516 - INFO - \u2705 Dropdown sq_100i dipilih: Tidak
+2026-03-16 14:06:33,939 - INFO - \u2705 Dropdown sq_103i dipilih: Tidak
+2026-03-16 14:06:35,358 - INFO - \u2705 Dropdown sq_106i dipilih: Tidak
+2026-03-16 14:06:36,774 - INFO - \u2705 Dropdown sq_109i dipilih: Tidak
+2026-03-16 14:06:38,185 - INFO - \u2705 Dropdown sq_112i dipilih: Tidak
+2026-03-16 14:06:39,604 - INFO - \u2705 Dropdown sq_115i dipilih: Tidak
+2026-03-16 14:06:39,661 - INFO - \u2705 Form dikirim
+2026-03-16 14:06:43,523 - INFO - \u2705 Input Data diklik (rowfrm000051)
+2026-03-16 14:06:48,800 - INFO - \u2139\ufe0f Input tidak bisa diisi (rowfrm000093)
+2026-03-16 14:06:51,226 - INFO - \u2705 Input (SurveyJS) diisi & committed: 56
+2026-03-16 14:06:52,032 - INFO - \u2705 Input (SurveyJS) diisi & committed: 158
+2026-03-16 14:06:52,811 - INFO - \u2705 Input (SurveyJS) diisi & committed: 80
+2026-03-16 14:06:53,195 - INFO - \u2705 Form dikirim
+2026-03-16 14:06:56,196 - INFO - \u2714 BB TB LP selesai
+2026-03-16 14:06:57,210 - INFO - \u2705 Input Data diklik (rowfrm000256)
+2026-03-16 14:06:57,983 - INFO - \u2705 Radio dengan value PPV00000328 sudah diklik
+2026-03-16 14:06:58,377 - INFO - \u2705 Input (SurveyJS) diisi & committed: 86
+2026-03-16 14:06:58,436 - INFO - \u2705 Form dikirim
+2026-03-16 14:07:01,437 - INFO - \u2714 gula darah selesai
+2026-03-16 14:07:02,327 - INFO - \u2705 Input Data diklik (rowfrm000265)
+2026-03-16 14:07:03,415 - INFO - \u2705 Radio dengan value PPV00000380 sudah diklik
+2026-03-16 14:07:03,806 - INFO - \u2705 Input (SurveyJS) diisi & committed: 110
+2026-03-16 14:07:04,195 - INFO - \u2705 Input (SurveyJS) diisi & committed: 70
+2026-03-16 14:07:04,258 - INFO - \u2705 Form dikirim
+2026-03-16 14:07:07,259 - INFO - \u2714 Tekanan Darah selesai
+2026-03-16 14:07:07,896 - INFO - \u2705 Tombol 'Selesaikan Layanan' diklik
+2026-03-16 14:07:08,460 - INFO - \u2705 Tombol 'Konfirmasi' diklik
+2026-03-16 14:07:09,065 - INFO - \U0001f519 Kembali ke daftar layanan
+2026-03-16 14:07:09,066 - INFO - \u2705 Pasien selesai
+2026-03-16 14:07:09,066 - INFO - 
+===== HASIL BOT =====
+2026-03-16 14:07:09,067 - INFO - Total pasien : 3
+2026-03-16 14:07:09,067 - INFO - Sukses       : 2
+2026-03-16 14:07:09,067 - INFO - Gagal        : 1
+2026-03-16 14:07:09,068 - INFO - Tidak ketemu : 0

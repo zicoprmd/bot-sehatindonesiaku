@@ -6,8 +6,25 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import pandas as pd
 from selenium.webdriver.common.keys import Keys
-import time 
+import time
+import logging
 from selenium.webdriver.common.action_chains import ActionChains
+
+#==============================
+# LOGGING FILE
+#==============================
+import logging
+
+logging.basicConfig(
+    filename="bot_sehatindo.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+def log(msg):
+    print(msg)
+    logging.info(msg)
+#===============================
 
 # ==============================
 # KONFIGURASI EDGE PROFILE
@@ -42,7 +59,7 @@ if "login" in current_url:
         "Jika sudah masuk DASHBOARD, tekan ENTER di sini..."
     )
 else:
-    print("✅ Session aktif, langsung dashboard")
+    log("✅ Session aktif, langsung dashboard")
 ############CKGUMUM
 try:
     ckg_umum_btn = wait.until(
@@ -51,9 +68,9 @@ try:
         )
     )
     ckg_umum_btn.click()
-    print("✅ CKG Umum diklik")
+    log("✅ CKG Umum diklik")
 except:
-    print("ℹ️ CKG Umum tidak muncul / sudah aktif")
+    log("ℹ️ CKG Umum tidak muncul / sudah aktif")
 ############MENU PELAYANAN
 menu_pelayanan = wait.until(
     EC.element_to_be_clickable(
@@ -61,7 +78,27 @@ menu_pelayanan = wait.until(
     )
 )
 menu_pelayanan.click()
-time.sleep(2)
+time.sleep(8)
+
+#############chekbox same location
+def centang_lokasi_sama():
+
+    checkbox = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable(
+            (By.XPATH,
+             "//div[contains(.,'Lokasi sama dengan puskesmas')]/preceding::div[contains(@class,'check')][1]")
+        )
+    )
+
+    driver.execute_script(
+        "arguments[0].scrollIntoView({block:'center'});", checkbox
+    )
+
+    ActionChains(driver).move_to_element(checkbox).click().perform()
+
+    log("✅ Checkbox 'Lokasi sama dengan puskesmas' dicentang")
+
+centang_lokasi_sama()
 
 ##############clik simpan
 try:
@@ -71,9 +108,9 @@ try:
         )
     )
     simpan_btn.click()
-    print("✅ simpan diklik")
+    log("✅ simpan diklik")
 except:
-    print("ℹ️ simpan tidak muncul / sudah aktif")
+    log("ℹ️ simpan tidak muncul / sudah aktif")
 
 
 # ===== BACA EXCEL =====
@@ -83,7 +120,7 @@ df = pd.read_excel("datasehat.xlsx", sheet_name="data")
 i = 0
 nama = str(df.loc[i, "nama"]).upper()
 
-print("NAMA dari Excel:", nama)
+
 
 # ===== TUNGGU INPUT MUNCUL =====
 
@@ -101,7 +138,7 @@ def cari_pasien(nama):
     input_nama.send_keys(str(nama))
     input_nama.send_keys(Keys.ENTER)
 
-    print(f"🔎 Mencari pasien: {nama}")
+    log(f"🔎 Mencari pasien: {nama}")
 
     # Tunggu tabel hasil muncul
     WebDriverWait(driver, 5).until(
@@ -109,6 +146,18 @@ def cari_pasien(nama):
             (By.XPATH, "//table")
         )
     )
+
+def pasien_ditemukan():
+
+    try:
+        WebDriverWait(driver,5).until(
+            EC.presence_of_element_located(
+                (By.XPATH,"//table//tr")
+            )
+        )
+        return True
+    except:
+        return False
 
 #==================MULAI BERDASARKAN NAMA SETELAH SEARCH
 def xpath_literal(s):
@@ -141,11 +190,11 @@ def klik_mulai_berdasarkan_nama(nama):
             .click()\
             .perform()
 
-        print(f"✅ Tombol Mulai diklik untuk {nama}")
+        log(f"✅ Tombol Mulai diklik untuk {nama}")
         return True
 
     except Exception as e:
-        print(f"❌ Gagal klik Mulai untuk {nama}")
+        log(f"❌ Gagal klik Mulai untuk {nama}")
         return False
 
 def klik_tombol_jika_ada(teks_tombol):
@@ -169,12 +218,12 @@ def klik_tombol_jika_ada(teks_tombol):
             .click()\
             .perform()
 
-        print(f"✅ Tombol '{teks_tombol}' diklik")
+        log(f"✅ Tombol '{teks_tombol}' diklik")
 
         return True
 
     except:
-        print(f"ℹ️ Tombol '{teks_tombol}' tidak muncul / sudah dilewati")
+        log(f"ℹ️ Tombol '{teks_tombol}' tidak muncul / sudah dilewati")
         return False
 
 
@@ -190,26 +239,14 @@ def klik_inputdata_jika_ada(nama_layanan):
             )
         )
         btn.click()
-        print(f"✅ Input Data '{nama_layanan}' diklik")
+        log(f"✅ Input Data '{nama_layanan}' diklik")
 
         return True
 
     except:
-        print(f"ℹ️ Tombol '{nama_layanan}' tidak muncul / sudah dilewati")
+        log(f"ℹ️ Tombol '{nama_layanan}' tidak muncul / sudah dilewati")
         return False
 
-#FUNGSI NAMA LAYANAN
-def klik_input_data(nama_layanan):
-    btn = wait.until(
-        EC.element_to_be_clickable(
-            (
-                By.XPATH,
-                f"//tr[.//td[contains(., '{nama_layanan}')]]//button[contains(., 'Input Data')]"
-            )
-        )
-    )
-    btn.click()
-    print(f"✅ Input Data '{nama_layanan}' diklik")
 
 #demografiprempuan
 def pilih_radio_demografi(pertanyaan, jawaban):
@@ -227,11 +264,11 @@ def pilih_radio_demografi(pertanyaan, jawaban):
         driver.execute_script("arguments[0].scrollIntoView({block:'center'});", radio)
         driver.execute_script("arguments[0].click();", radio)
 
-        print(f"✅ {pertanyaan} → {jawaban}")
+        log(f"✅ {pertanyaan} → {jawaban}")
 
         return True
     except:
-        print(f"ℹ️ Tombol '{pertanyaan}' tidak muncul / sudah dilewati")
+        log(f"ℹ️ Tombol '{pertanyaan}' tidak muncul / sudah dilewati")
         return False
 
 
@@ -245,10 +282,10 @@ def klik_kirim():
         )
         driver.execute_script("arguments[0].scrollIntoView({block:'center'});", kirim_btn)
         driver.execute_script("arguments[0].click();", kirim_btn)
-        print("✅ Form dikirim")
+        log("✅ Form dikirim")
         return True
     except:
-        print("ℹ️ Tombol kirim tidak muncul / sudah dilewati")
+        log("ℹ️ Tombol kirim tidak muncul / sudah dilewati")
         return False
 
 
@@ -274,10 +311,10 @@ def klik_radio_surveyjs_by_value(value):
             .click()\
             .perform()
 
-        print(f"✅ Radio dengan value {value} sudah diklik")
+        log(f"✅ Radio dengan value {value} sudah diklik")
         return True
     except:
-        print(f"ℹ️ Tombol {value} tidak muncul / sudah dilewati")
+        log(f"ℹ️ Tombol {value} tidak muncul / sudah dilewati")
         return False
 
 
@@ -385,10 +422,10 @@ def pilih_dropdown_surveyjs_by_text(question_id, option_text):
 
         option.click()
 
-        print(f"✅ Dropdown {question_id} dipilih: {option_text}")
+        log(f"✅ Dropdown {question_id} dipilih: {option_text}")
         return True
     except:
-        print(f"!ℹ️ Dropdown {question_id} tidak terpilih: {option_text}")
+        log(f"!ℹ️ Dropdown {question_id} tidak terpilih: {option_text}")
         return False
 
 
@@ -429,10 +466,10 @@ def klik_input_data_by_row(row_id):
 
         ActionChains(driver).move_to_element(btn).click().perform()
 
-        print(f"✅ Input Data diklik ({row_id})")
+        log(f"✅ Input Data diklik ({row_id})")
         return True
     except:
-        print(f"ℹ️ Input tidak bisa diisi ({row_id})")
+        log(f"ℹ️ Input tidak bisa diisi ({row_id})")
         return False
 
 
@@ -457,10 +494,10 @@ def isi_input_text_surveyjs(xpath_input, nilai):
         field.send_keys(nilai)
         field.send_keys(Keys.TAB)   # 🔥 INI KUNCINYA
 
-        print(f"✅ Input (SurveyJS) diisi & committed: {nilai}")
+        log(f"✅ Input (SurveyJS) diisi & committed: {nilai}")
         return True
     except:
-        print(f"ℹ️ Input tidak bisa diisi")
+        log(f"ℹ️ Input tidak bisa diisi")
         return False
 
 #=============BB TB LP================
@@ -477,9 +514,9 @@ def proses_bb_tb_lp(df, i):
         time.sleep(0.3)
         klik_kirim()
         time.sleep(3)
-        print("✔ BB TB LP selesai")
+        log("✔ BB TB LP selesai")
     except Exception as e:
-        print(f"❌ BB TB LP: {e}")
+        log(f"❌ BB TB LP: {e}")
 
 #=================GULA DARAH==================#
 def proses_gula_darah(df, i):
@@ -489,9 +526,9 @@ def proses_gula_darah(df, i):
         isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[i, "GDS"])
         klik_kirim()
         time.sleep(3)
-        print("✔ gula darah selesai")
+        log("✔ gula darah selesai")
     except Exception as e:
-        print(f"❌ gula darah: {e}")
+        log(f"❌ gula darah: {e}")
 
 
 #==============TEKANAN DARAH=============
@@ -503,9 +540,9 @@ def proses_tekanan_darah(df, i):
         isi_input_text_surveyjs("//*[@id='sq_103i']", df.loc[i, "diastol"])
         klik_kirim()
         time.sleep(3)
-        print("✔ Tekanan Darah selesai")
+        log("✔ Tekanan Darah selesai")
     except Exception as e:
-        print(f"❌ Tekanan Darah gagal: {e}")
+        log(f"❌ Tekanan Darah gagal: {e}")
 
 
 #balik ke layanan untuk search nik
@@ -529,29 +566,78 @@ def klik_back_ke_layanan():
         .click()\
         .perform()
 
-    print("🔙 Kembali ke daftar layanan")
+    log("🔙 Kembali ke daftar layanan")
+#KLIK SEDANG PEMERIKSAAN TAB
+def klik_tab_sedang_pemeriksaan():
+    try:
+        tab = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    "//div[contains(@class,'cursor-pointer') and normalize-space()='Sedang Pemeriksaan']"
+                )
+            )
+        )
 
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", tab
+        )
 
+        ActionChains(driver)\
+            .move_to_element(tab)\
+            .pause(0.2)\
+            .click()\
+            .perform()
+
+        # tunggu tabel reload
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//table//tr")
+            )
+        )
+
+        print("📂 Tab 'Sedang Pemeriksaan' aktif")
+        return True
+
+    except Exception as e:
+        print("❌ Gagal klik tab Sedang Pemeriksaan:", e)
+        return False
+#===============================statistik hasil run
+stats = {
+    "total": len(df),
+    "sukses": 0,
+    "gagal": 0,
+    "pasien_tidak_ditemukan": 0
+}
 
 #=================================LOOOOOOP
 for i in range(len(df)):
 
     nama = df.loc[i, "nama"].upper()
 
-    try:
-        print(f"\n==== PROSES PASIEN: {nama} ====")
+    log(f"\n===== PASIEN {i+1}/{len(df)} =====")
+    log(f"👤 {nama}")
 
+    try:
+
+        klik_tab_sedang_pemeriksaan()
         cari_pasien(nama)
         time.sleep(1)
-        
+
+        if not pasien_ditemukan():
+            log(f"⛔ Pasien tidak ditemukan: {nama}")
+            stats["pasien_tidak_ditemukan"] += 1
+            continue
+
         if not klik_mulai_berdasarkan_nama(nama):
-            print("⛔ Tidak bisa klik Mulai")
+            log("⛔ Tidak bisa klik Mulai")
+            stats['gagal'] += 1
             continue
 
         klik_tombol_jika_ada("Mulai Pemeriksaan")
         time.sleep(1)
 
-        ###########SKRINING
+        # ======= SKRINING =======
         skrining_demografi()
         skrining_kanker_usus()
         skrining_risiko_TB()
@@ -561,7 +647,7 @@ for i in range(len(df)):
         skrining_kanker_paru()
         skrining_perilaku_merokok()
         skrining_tingkat_aktivitas_fisik()
-        ###########INPUT DATA
+        # ======= INPUT DATA ======
         proses_bb_tb_lp(df, i)
         proses_gula_darah(df, i)
         proses_tekanan_darah(df, i)
@@ -569,14 +655,28 @@ for i in range(len(df)):
         klik_tombol_jika_ada("Selesaikan Layanan")
         klik_tombol_jika_ada("Konfirmasi")
 
-        print(f"✅ Semua layanan selesai untuk {nama}")
-        time.sleep(1)
         klik_back_ke_layanan()
 
-    except Exception as e:
-        print(f"❌ ERROR pada pasien {nama}: {e}")
-        continue
+        stats["sukses"] += 1
 
+        log("✅ Pasien selesai")
+
+    except Exception as e:
+
+        log(f"❌ ERROR pasien {nama}: {e}")
+        stats["gagal"] += 1
+
+        try:
+            klik_back_ke_layanan()
+        except:
+            pass
+# ==============================
+log("\n===== HASIL BOT =====")
+
+log(f"Total pasien : {stats['total']}")
+log(f"Sukses       : {stats['sukses']}")
+log(f"Gagal        : {stats['gagal']}")
+log(f"Tidak ketemu : {stats['pasien_tidak_ditemukan']}")
 
 
 # ==============================
