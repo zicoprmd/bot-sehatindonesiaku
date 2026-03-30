@@ -335,15 +335,31 @@ def skrining_kanker_usus():
     klik_radio_surveyjs_by_value("PPV00000538")
     klik_kirim()
 
+#Faktor Risiko Malaria
+def skrining_risiko_malaria():
+    klik_inputdata_jika_ada("Faktor Risiko Malaria")
+    klik_radio_surveyjs_by_value("PPV00000581")
+    klik_radio_surveyjs_by_value("PPV00000591")
+    klik_radio_surveyjs_by_value("PPV00000607")
+    klik_radio_surveyjs_by_value("PPV00001233")
+    klik_kirim()
+
 #Faktor Risiko TB - Dewasa & Lansia
 def skrining_risiko_TB():
     klik_inputdata_jika_ada("Faktor Risiko TB - Dewasa & Lansia")
     klik_radio_surveyjs_by_value("PPV00000883")
     klik_kirim()
 
+#Gejala Cemas Remaja
+def skrining_gejala_cemas_remaja():
+    klik_inputdata_jika_ada("Gejala Cemas Remaja")
+    klik_radio_surveyjs_by_value("PPV00000883")
+    klik_kirim()
+
 #HATI
 def skrining_hati():
     klik_inputdata_jika_ada("Hati")
+    klik_inputdata_jika_ada("Faktor Risiko Hepatitis SMP dan SMA")
     time.sleep(1)
     klik_radio_surveyjs_by_value("PPV00000350")
     klik_radio_surveyjs_by_value("PPV00000352")
@@ -390,43 +406,138 @@ def skrining_perilaku_merokok():
     klik_radio_surveyjs_by_value("PPV00000426")
     klik_radio_surveyjs_by_value("PPV00000438")
     klik_kirim()
-#======================================dropdown
-
-
-
-#===============dropdown untuk klik
+#======================================dropdown SURVEY JS
 def pilih_dropdown_surveyjs_by_text(question_id, option_text):
     try:
-        # klik dropdown
-        dropdown = WebDriverWait(driver, 5).until(
+        # ===== tunggu dropdown clickable =====
+        dropdown = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.ID, question_id))
         )
 
         driver.execute_script(
             "arguments[0].scrollIntoView({block:'center'});", dropdown
         )
-        dropdown.click()
+        time.sleep(0.3)
 
-        # tunggu list khusus dropdown ini muncul
+        # ===== klik pakai JS (lebih stabil) =====
+        driver.execute_script("arguments[0].focus();", dropdown)
+        driver.execute_script("arguments[0].click();", dropdown)
+
         list_id = f"{question_id}_list"
 
-        option = WebDriverWait(driver, 5).until(
+        # ===== tunggu dropdown aktif =====
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, list_id))
+        )
+
+        # ===== ambil option yang BENAR =====
+        option = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    f"//ul[@id='{list_id}']//li[@role='option']"
-                    f"[.//div[normalize-space()='{option_text}']]"
+                    f"//ul[@id='{list_id}']//*[text()='{option_text}']/ancestor::*[self::li or self::div][1]"
                 )
+            )
+        )
+
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", option
+        )
+        time.sleep(0.2)
+
+        # ===== klik option =====
+        try:
+            option.click()
+        except:
+            driver.execute_script("arguments[0].click();", option)
+
+        # ===== commit perubahan =====
+        driver.execute_script("arguments[0].blur();", dropdown)
+
+        log(f"✅ Dropdown {question_id} dipilih: {option_text}")
+        return True
+
+    except Exception as e:
+        log(f"❌ Dropdown ERROR {question_id}: {e}")
+        return False
+#=====================================DROPDOWN BY LABEL
+def pilih_dropdown_by_label(label_text, option_text):
+    try:
+        container = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located(
+                (By.XPATH, f"//div[contains(., '{label_text}')]")
+            )
+        )
+
+        dropdown = container.find_element(By.XPATH, ".//div[contains(@class,'sd-dropdown')]")
+        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", dropdown)
+        dropdown.click()
+
+        option = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located(
+                (By.XPATH, f"//div[contains(@class,'sd-item')]//span[text()='{option_text}']")
             )
         )
 
         option.click()
 
-        log(f"✅ Dropdown {question_id} dipilih: {option_text}")
+        log(f"✅ Dropdown '{label_text}' → {option_text}")
         return True
-    except:
-        log(f"!ℹ️ Dropdown {question_id} tidak terpilih: {option_text}")
+    except Exception as e:
+        log(f"❌ Dropdown '{label_text}' gagal: {e}")
         return False
+
+
+
+#===============dropdown untuk klik
+# def pilih_dropdown_surveyjs_by_text(question_id, option_text):
+#     try:
+#         # ===== klik dropdown (pakai ActionChains) =====
+#         dropdown = WebDriverWait(driver, 5).until(
+#             EC.presence_of_element_located((By.ID, question_id))
+#         )
+
+#         driver.execute_script(
+#             "arguments[0].scrollIntoView({block:'center'});", dropdown
+#         )
+
+#         ActionChains(driver)\
+#             .move_to_element(dropdown)\
+#             .pause(0.2)\
+#             .click()\
+#             .perform()
+
+#         # ===== tunggu list muncul =====
+#         list_id = f"{question_id}_list"
+
+#         WebDriverWait(driver, 5).until(
+#             EC.presence_of_element_located((By.ID, list_id))
+#         )
+
+#         # ===== ambil option =====
+#         option = WebDriverWait(driver, 5).until(
+#             EC.presence_of_element_located(
+#                 (
+#                     By.XPATH,
+#                     f"//ul[@id='{list_id}']//li[@role='option']"
+#                     f"[.//div[normalize-space()='{option_text}']]"
+#                 )
+#             )
+#         )
+
+#         # ===== klik option (pakai ActionChains) =====
+#         ActionChains(driver)\
+#             .move_to_element(option)\
+#             .pause(0.2)\
+#             .click()\
+#             .perform()
+
+#         log(f"✅ Dropdown {question_id} dipilih: {option_text}")
+#         return True
+
+#     except Exception as e:
+#         log(f"ℹ️ Dropdown {question_id} gagal: {option_text} | {e}")
+#         return False
 
 
 #=======================skrining aktifitas fisik
@@ -505,13 +616,17 @@ def proses_bb_tb_lp(df, i):
     try:
         klik_input_data_by_row("rowfrm000051") #perempuan
         klik_input_data_by_row("rowfrm000093") #laki-laki
+        klik_input_data_by_row("rowfrm000119") #gizi anak sekolah
         time.sleep(2)
         isi_input_text_surveyjs("//*[@id='sq_100i']", df.loc[i, "BB"])   # berat badan
         time.sleep(0.3)
         isi_input_text_surveyjs("//*[@id='sq_101i']", df.loc[i, "TB"])   # tinggi badan
         time.sleep(0.3)
         isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[i, "LP"])   # lingkar perut
-        time.sleep(0.3)
+        time.sleep(0.6)
+        pilih_dropdown_surveyjs_by_text("sq_102i", "Obesitas")
+        # pilih_dropdown_by_label("Pilih hasil IMT/U", "Gizi Buruk") GAGAL TIDAK BISA PAKAI LABEL
+        time.sleep(1)
         klik_kirim()
         time.sleep(3)
         log("✔ BB TB LP selesai")
@@ -521,8 +636,10 @@ def proses_bb_tb_lp(df, i):
 #=================GULA DARAH==================#
 def proses_gula_darah(df, i):
     try:
-        klik_input_data_by_row("rowfrm000256")
+        klik_input_data_by_row("rowfrm000256") #dewasa
+        klik_input_data_by_row("rowfrm000197") #remaja
         klik_radio_surveyjs_by_value("PPV00000328")
+        klik_radio_surveyjs_by_value("PPV00001035") # ramaja
         isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[i, "GDS"])
         klik_kirim()
         time.sleep(3)
@@ -534,10 +651,13 @@ def proses_gula_darah(df, i):
 #==============TEKANAN DARAH=============
 def proses_tekanan_darah(df, i):
     try:
-        klik_input_data_by_row("rowfrm000265")
+        klik_input_data_by_row("rowfrm000265") #dewasa
+        klik_input_data_by_row("rowfrm000266") #remaja
         klik_radio_surveyjs_by_value("PPV00000380")
         isi_input_text_surveyjs("//*[@id='sq_102i']", df.loc[i, "sistol"])
         isi_input_text_surveyjs("//*[@id='sq_103i']", df.loc[i, "diastol"])
+        isi_input_text_surveyjs("//*[@id='sq_100i']", df.loc[i, "sistol"]) #remaja
+        isi_input_text_surveyjs("//*[@id='sq_101i']", df.loc[i, "diastol"]) #remaja
         klik_kirim()
         time.sleep(3)
         log("✔ Tekanan Darah selesai")
@@ -602,6 +722,42 @@ def klik_tab_sedang_pemeriksaan():
     except Exception as e:
         print("❌ Gagal klik tab Sedang Pemeriksaan:", e)
         return False
+
+#KLIK SELESAI PEMERIKSAAN TAB
+def klik_tab_selesai_pemeriksaan():
+    try:
+        tab = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    "//div[contains(@class,'cursor-pointer') and normalize-space()='Selesai Pemeriksaan']"
+                )
+            )
+        )
+
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", tab
+        )
+
+        ActionChains(driver)\
+            .move_to_element(tab)\
+            .pause(0.2)\
+            .click()\
+            .perform()
+
+        # tunggu tabel reload
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//table//tr")
+            )
+        )
+
+        print("📂 Tab 'Selesai Pemeriksaan' aktif")
+        return True
+
+    except Exception as e:
+        print("❌ Gagal klik tab Selesai Pemeriksaan:", e)
+        return False
 #===============================statistik hasil run
 stats = {
     "total": len(df),
@@ -638,22 +794,25 @@ for i in range(len(df)):
         time.sleep(1)
 
         # ======= SKRINING =======
-        skrining_demografi()
-        skrining_kanker_usus()
-        skrining_risiko_TB()
-        skrining_hati()
-        skrining_leher_rahim()
-        skrining_kesehatan_jiwa()
-        skrining_kanker_paru()
-        skrining_perilaku_merokok()
-        skrining_tingkat_aktivitas_fisik()
+        # skrining_demografi()
+        # skrining_kanker_usus()
+        # skrining_risiko_TB()
+        # skrining_hati()
+        # skrining_leher_rahim()
+        # skrining_kesehatan_jiwa()
+        # skrining_kanker_paru()
+        # skrining_perilaku_merokok()
+        # skrining_tingkat_aktivitas_fisik()
         # ======= INPUT DATA ======
         proses_bb_tb_lp(df, i)
         proses_gula_darah(df, i)
         proses_tekanan_darah(df, i)
 
+        time.sleep(2)
         klik_tombol_jika_ada("Selesaikan Layanan")
+        time.sleep(2)
         klik_tombol_jika_ada("Konfirmasi")
+        time.sleep(2)
 
         klik_back_ke_layanan()
 
