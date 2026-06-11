@@ -1,22 +1,17 @@
-from selenium import webdriver
-from selenium.webdriver.edge.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import (
-    TimeoutException,
-    ElementClickInterceptedException,
-    StaleElementReferenceException,
-)
-import pandas as pd
-from selenium.webdriver.common.keys import Keys
 import logging
-from selenium.webdriver.common.action_chains import ActionChains
 import time
 
-#==============================
+import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.edge.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+# ==============================
 # LOGGING
-#==============================
+# ==============================
 logging.basicConfig(
     filename="bot_sehatindo.log",
     level=logging.INFO,
@@ -25,21 +20,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def log(msg):
     print(msg)
     logger.info(msg)
 
-#==============================
+
+# ==============================
 # KONFIGURASI
-#==============================
+# ==============================
 EDGE_PROFILE = r"C:\Users\ThinkPad\AppData\Local\Microsoft\Edge\User Data"
 WEBSITE_URL = "https://sehatindonesiaku.kemkes.go.id"
 EXCEL_FILE = "datasehat.xlsx"
 PROGRESS_FILE = "progress.txt"
 
-#==============================
+
+# ==============================
 # BROWSER SETUP
-#==============================
+# ==============================
 def init_browser():
     options = Options()
     options.add_argument(f"--user-data-dir={EDGE_PROFILE}")
@@ -49,16 +47,17 @@ def init_browser():
     driver.implicitly_wait(0)  # NO implicit wait - kita kontrol manual
     return driver, WebDriverWait(driver, 10)
 
-#==============================
+
+# ==============================
 # HELPER: SIMPLE CLICK (tanpa retry - cepat)
-#==============================
+# ==============================
 def simple_click(wait, locator, log_teks=""):
     """Klik element simple, tanpa retry. Timeout 3 detik agar skip cepat."""
     try:
-        el = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable(locator)
+        el = WebDriverWait(wait._driver, 3).until(EC.element_to_be_clickable(locator))
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", el
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
         wait._driver.execute_script("arguments[0].click();", el)
         if log_teks:
             log(f"✅ {log_teks}")
@@ -68,10 +67,13 @@ def simple_click(wait, locator, log_teks=""):
             log(f"⚠️ Skip: {log_teks}")
         return False
 
+
 def js_click(wait, el, log_teks=""):
     """Klik element via JS."""
     try:
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", el
+        )
         wait._driver.execute_script("arguments[0].click();", el)
         if log_teks:
             log(f"✅ {log_teks}")
@@ -81,19 +83,19 @@ def js_click(wait, el, log_teks=""):
             log(f"⚠️ Gagal: {log_teks}")
         return False
 
-#==============================
+
+# ==============================
 # HELPER: CEK ELEMENT ADA
-#==============================
+# ==============================
 def element_exists(wait, locator, timeout=None):
     """Cek apakah element ada"""
     t = timeout or 2
     try:
-        WebDriverWait(wait._driver, t).until(
-            EC.presence_of_element_located(locator)
-        )
+        WebDriverWait(wait._driver, t).until(EC.presence_of_element_located(locator))
         return True
     except:
         return False
+
 
 def wait_visible(wait, locator, timeout=None):
     """Tunggu element visible, return element atau None"""
@@ -105,42 +107,51 @@ def wait_visible(wait, locator, timeout=None):
     except:
         return None
 
-#==============================
+
+# ==============================
 # HELPER: TOMBOL
-#==============================
+# ==============================
 def klik_tombol(wait, teks, parent_xpath=None):
     """Klik tombol berdasarkan teks"""
     base = parent_xpath or "//"
     locator = (By.XPATH, f"{base}button[.//*[contains(normalize-space(), '{teks}')]]")
     return simple_click(wait, locator, f"Tombol: {teks}")
 
+
 def klik_input_by_row(wait, row_id):
     """Klik Input Data di row tertentu"""
-    return simple_click(wait, (By.XPATH, f"//div[@id='{row_id}']//button"),
-                       f"Input row: {row_id}")
+    return simple_click(
+        wait, (By.XPATH, f"//div[@id='{row_id}']//button"), f"Input row: {row_id}"
+    )
+
 
 def klik_input_by_label(wait, nama_layanan):
     """Klik Input Data berdasarkan nama layanan"""
-    return simple_click(wait, (
-        By.XPATH,
-        f"//tr[.//td[contains(., '{nama_layanan}')]]//button[contains(., 'Input Data')]"
-    ), f"Input: {nama_layanan}")
+    return simple_click(
+        wait,
+        (
+            By.XPATH,
+            f"//tr[.//td[contains(., '{nama_layanan}')]]//button[contains(., 'Input Data')]",
+        ),
+        f"Input: {nama_layanan}",
+    )
 
-#==============================
+
+# ==============================
 # HELPER: RADIO BUTTON
-#==============================
+# ==============================
 def pilih_radio(wait, pertanyaan, jawaban):
     """Pilih radio button"""
     try:
         locator = (
             By.XPATH,
             f"//div[.//text()[contains(., '{pertanyaan}')]]"
-            f"//label[normalize-space()='{jawaban}']"
+            f"//label[normalize-space()='{jawaban}']",
         )
-        el = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable(locator)
+        el = WebDriverWait(wait._driver, 3).until(EC.element_to_be_clickable(locator))
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", el
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
         wait._driver.execute_script("arguments[0].click();", el)
         log(f"✅ Radio: {pertanyaan} → {jawaban}")
         return True
@@ -148,35 +159,39 @@ def pilih_radio(wait, pertanyaan, jawaban):
         log(f"⚠️ Skip radio: {pertanyaan}")
         return False
 
-#==============================
+
+# ==============================
 # HELPER: SURVEYJS RADIO
-#==============================
+# ==============================
 def klik_radio_surveyjs(wait, value):
     """Klik radio SurveyJS"""
     try:
         locator = (
             By.XPATH,
-            f"//label[contains(@class,'sd-selectbase__label')][.//input[@value='{value}']]"
+            f"//label[contains(@class,'sd-selectbase__label')][.//input[@value='{value}']]",
         )
-        el = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable(locator)
+        el = WebDriverWait(wait._driver, 3).until(EC.element_to_be_clickable(locator))
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", el
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
         wait._driver.execute_script("arguments[0].click();", el)
         return True
     except:
         return False
 
-#==============================
+
+# ==============================
 # HELPER: DROPDOWN SURVEYJS
-#==============================
+# ==============================
 def pilih_dropdown_surveyjs(wait, question_id, option_text):
     """Pilih dropdown SurveyJS"""
     try:
         dropdown = WebDriverWait(wait._driver, 3).until(
             EC.element_to_be_clickable((By.ID, question_id))
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", dropdown)
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", dropdown
+        )
         wait._driver.execute_script("arguments[0].click();", dropdown)
 
         list_id = f"{question_id}_list"
@@ -185,32 +200,38 @@ def pilih_dropdown_surveyjs(wait, question_id, option_text):
         )
 
         option_el = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable((
-                By.XPATH,
-                f"//ul[@id='{list_id}']//*[text()='{option_text}']/ancestor::*[self::li or self::div][1]"
-            ))
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    f"//ul[@id='{list_id}']//*[text()='{option_text}']/ancestor::*[self::li or self::div][1]",
+                )
+            )
         )
         wait._driver.execute_script("arguments[0].click();", option_el)
         return True
-    except Exception as e:
+    except Exception:
         log(f"⚠️ Dropdown gagal: {question_id} -> {option_text}")
         return False
 
-#==============================
+
+# ==============================
 # HELPER: INPUT TEXT
-#==============================
+# ==============================
 def isi_input_surveyjs(wait, xpath_or_id, nilai):
     """Isi input text SurveyJS"""
     try:
         nilai = str(nilai).replace(",", ".")
         locator = (
-            (By.ID, xpath_or_id) if not xpath_or_id.startswith("//")
+            (By.ID, xpath_or_id)
+            if not xpath_or_id.startswith("//")
             else (By.XPATH, xpath_or_id)
         )
         field = WebDriverWait(wait._driver, 3).until(
             EC.element_to_be_clickable(locator)
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", field)
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", field
+        )
         field.click()
         field.clear()
         field.send_keys(nilai)
@@ -219,34 +240,36 @@ def isi_input_surveyjs(wait, xpath_or_id, nilai):
     except:
         return False
 
-#==============================
+
+# ==============================
 # HELPER: KIRIM
-#==============================
+# ==============================
 def klik_kirim(wait):
     """Klik tombol Kirim"""
     try:
         locator = (By.XPATH, "//*[@id='sv-nav-complete']//input[@type='button']")
-        el = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable(locator)
+        el = WebDriverWait(wait._driver, 3).until(EC.element_to_be_clickable(locator))
+        wait._driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", el
         )
-        wait._driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
         wait._driver.execute_script("arguments[0].click();", el)
         time.sleep(2.5)  # Jeda SETELAH klik - agar halaman label selesai load
-        log(f"✅ Kirim")
+        log("✅ Kirim")
         return True
-    except Exception as e:
-        log(f"❌ Gagal Kirim")
+    except Exception:
+        log("❌ Gagal Kirim")
         return False
 
-#==============================
+
+# ==============================
 # HELPER: BACK
-#==============================
+# ==============================
 def klik_back(wait):
     """Klik tombol kembali"""
     try:
         locator = (
             By.XPATH,
-            "//img[contains(@class,'cursor-pointer') and contains(@src,'icon-arrow-left')]"
+            "//img[contains(@class,'cursor-pointer') and contains(@src,'icon-arrow-left')]",
         )
         el = wait_visible(wait, locator)
         if not el:
@@ -256,9 +279,10 @@ def klik_back(wait):
     except:
         return False
 
-#==============================
+
+# ==============================
 # SEARCH PASIEN
-#==============================
+# ==============================
 def cari_pasien(wait, nama):
     """Cari pasien"""
     try:
@@ -280,6 +304,7 @@ def cari_pasien(wait, nama):
     except:
         return False
 
+
 def pasien_ditemukan(wait):
     """Cek apakah pasien ditemukan"""
     try:
@@ -289,6 +314,7 @@ def pasien_ditemukan(wait):
         return True
     except:
         return False
+
 
 def klik_mulai(wait, nama=None):
     """Klik tombol Mulai"""
@@ -302,20 +328,19 @@ def klik_mulai(wait, nama=None):
 
         locator = (
             By.XPATH,
-            "//table//tr[1]//button[.//div[normalize-space()='Mulai']]"
+            "//table//tr[1]//button[.//div[normalize-space()='Mulai']]",
         )
-        btn = WebDriverWait(wait._driver, 3).until(
-            EC.element_to_be_clickable(locator)
-        )
+        btn = WebDriverWait(wait._driver, 3).until(EC.element_to_be_clickable(locator))
         js_click(wait, btn, f"Mulai: {nama or 'pasien'}")
         return True
     except:
-        log(f"⚠️ Gagal klik Mulai")
+        log("⚠️ Gagal klik Mulai")
         return False
 
-#==============================
+
+# ==============================
 # CEK SESSION
-#==============================
+# ==============================
 def cek_session(driver, wait):
     """Cek login session"""
     current_url = driver.current_url.lower()
@@ -326,16 +351,17 @@ def cek_session(driver, wait):
             "Login MANUAL + CAPTCHA, tekan ENTER kalau sudah di DASHBOARD..."
         )
 
-#==============================
+
+# ==============================
 # CHECKBOX
-#==============================
+# ==============================
 def centang_lokasi_sama(wait):
     """Centang checkbox lokasi"""
     try:
         locator = (
             By.XPATH,
             "//div[contains(.,'Lokasi sama dengan puskesmas')]"
-            "/preceding::div[contains(@class,'check')][1]"
+            "/preceding::div[contains(@class,'check')][1]",
         )
         checkbox = WebDriverWait(wait._driver, 15).until(
             EC.element_to_be_clickable(locator)
@@ -345,9 +371,10 @@ def centang_lokasi_sama(wait):
     except:
         return False
 
-#==============================
+
+# ==============================
 # LOAD / SAVE PROGRESS
-#==============================
+# ==============================
 def load_progress():
     try:
         with open(PROGRESS_FILE, "r") as f:
@@ -355,13 +382,15 @@ def load_progress():
     except:
         return 0
 
+
 def save_progress(index):
     with open(PROGRESS_FILE, "w") as f:
         f.write(str(index))
 
-#==============================
+
+# ==============================
 # SKRINING (tanpa time.sleep)
-#==============================
+# ==============================
 def skrining_demografi(wait):
     klik_input_by_label(wait, "Demografi Dewasa Perempuan")
     klik_input_by_label(wait, "Demografi Lansia")
@@ -371,11 +400,13 @@ def skrining_demografi(wait):
     pilih_radio(wait, "Apakah Anda penyandang disabilitas?", "Non disabilitas")
     klik_kirim(wait)
 
+
 def skrining_kanker_usus(wait):
     klik_input_by_label(wait, "Faktor Risiko Kanker Usus")
     pilih_radio(wait, "kanker kolorektal", "Tidak")
     klik_radio_surveyjs(wait, "PPV00000538")
     klik_kirim(wait)
+
 
 def skrining_malaria(wait):
     klik_input_by_label(wait, "Faktor Risiko Malaria")
@@ -385,10 +416,12 @@ def skrining_malaria(wait):
     klik_radio_surveyjs(wait, "PPV00001233")
     klik_kirim(wait)
 
+
 def skrining_tb(wait):
     klik_input_by_label(wait, "Faktor Risiko TB - Dewasa & Lansia")
     klik_radio_surveyjs(wait, "PPV00000883")
     klik_kirim(wait)
+
 
 def skrining_cemas_remaja(wait):
     klik_input_by_label(wait, "Gejala Cemas Remaja")
@@ -397,12 +430,14 @@ def skrining_cemas_remaja(wait):
     klik_radio_surveyjs(wait, "PPV00000605")
     klik_kirim(wait)
 
+
 def skrining_depresi_remaja(wait):
     klik_input_by_label(wait, "Gejala Depresi Remaja")
     klik_radio_surveyjs(wait, "PPV00000627")
     klik_radio_surveyjs(wait, "PPV00000629")
     klik_radio_surveyjs(wait, "PPV00000633")
     klik_kirim(wait)
+
 
 def skrining_reproduksi_putra(wait):
     klik_input_by_label(wait, "Kesehatan Reproduksi Putra - Anak Sekolah")
@@ -411,6 +446,7 @@ def skrining_reproduksi_putra(wait):
     klik_radio_surveyjs(wait, "PPV00000603")
     klik_kirim(wait)
 
+
 def skrining_reproduksi_putri(wait):
     klik_input_by_label(wait, "Kesehatan Reproduksi Putri - Anak Sekolah")
     klik_radio_surveyjs(wait, "PPV00000565")
@@ -418,11 +454,15 @@ def skrining_reproduksi_putri(wait):
     klik_radio_surveyjs(wait, "PPV00000571")
     klik_kirim(wait)
 
+
 def skrining_tingkat_aktivitas_fisik(wait):
-    klik_input_by_label(wait, "Kuesioner Tingkat Aktivitas Fisik - Tingkat Aktivitas Fisik")
+    klik_input_by_label(
+        wait, "Kuesioner Tingkat Aktivitas Fisik - Tingkat Aktivitas Fisik"
+    )
     isi_input_surveyjs(wait, "sq_100i", "1")
     isi_input_surveyjs(wait, "sq_101i", "1")
     klik_kirim(wait)
+
 
 def skrining_kebugaran(wait):
     klik_input_by_label(wait, "Kelayakan Tes Kebugaran")
@@ -431,6 +471,7 @@ def skrining_kebugaran(wait):
     klik_radio_surveyjs(wait, "PPV00000644")
     klik_radio_surveyjs(wait, "PPV00000650")
     klik_kirim(wait)
+
 
 def skrining_hati(wait):
     klik_input_by_label(wait, "Hati")
@@ -446,10 +487,12 @@ def skrining_hati(wait):
     klik_radio_surveyjs(wait, "PPV00000463")
     klik_kirim(wait)
 
+
 def skrining_leher_rahim(wait):
     klik_input_by_label(wait, "Kanker Leher Rahim")
     klik_radio_surveyjs(wait, "PPV00000346")
     klik_kirim(wait)
+
 
 def skrining_kesehatan_jiwa(wait):
     klik_input_by_label(wait, "Kesehatan Jiwa")
@@ -458,6 +501,7 @@ def skrining_kesehatan_jiwa(wait):
     klik_radio_surveyjs(wait, "PPV00000383")
     klik_radio_surveyjs(wait, "PPV00000384")
     klik_kirim(wait)
+
 
 def skrining_kanker_paru(wait):
     klik_input_by_label(wait, "Penapisan Risiko Kanker Paru")
@@ -469,6 +513,7 @@ def skrining_kanker_paru(wait):
     klik_radio_surveyjs(wait, "PPV00001033")
     klik_kirim(wait)
 
+
 def skrining_merokok(wait):
     klik_input_by_label(wait, "Perilaku Merokok")
     klik_input_by_label(wait, "Perilaku Merokok - Anak Sekolah")
@@ -478,10 +523,12 @@ def skrining_merokok(wait):
     klik_radio_surveyjs(wait, "PPV00000438")
     klik_kirim(wait)
 
+
 def skrining_riwayat_imunisasi(wait):
     klik_input_by_label(wait, "Riwayat Imunisasi Tetanus(Status T) - Hanya untuk Catin")
     pilih_dropdown_surveyjs(wait, "sq_100i", "Tidak tahu atau tidak ingat")
     klik_kirim(wait)
+
 
 def skrining_aktivitas_fisik(wait):
     klik_input_by_label(wait, "Tingkat Aktivitas Fisik (sedang dan berat)")
@@ -493,6 +540,7 @@ def skrining_aktivitas_fisik(wait):
     pilih_dropdown_surveyjs(wait, "sq_115i", "Tidak")
     klik_kirim(wait)
 
+
 def proses_bb_tb_lp(wait, df, i):
     klik_input_by_row(wait, "rowfrm000051")
     klik_input_by_row(wait, "rowfrm000093")
@@ -503,6 +551,7 @@ def proses_bb_tb_lp(wait, df, i):
     pilih_dropdown_surveyjs(wait, "sq_102i", "Gizi Baik")
     klik_kirim(wait)
 
+
 def proses_gula_darah(wait, df, i):
     klik_input_by_row(wait, "rowfrm000256")
     klik_input_by_row(wait, "rowfrm000197")
@@ -510,6 +559,7 @@ def proses_gula_darah(wait, df, i):
     klik_radio_surveyjs(wait, "PPV00001035")
     isi_input_surveyjs(wait, "//*[@id='sq_102i']", df.loc[i, "GDS"])
     klik_kirim(wait)
+
 
 def proses_tekanan_darah(wait, df, i):
     klik_input_by_row(wait, "rowfrm000265")
@@ -521,13 +571,29 @@ def proses_tekanan_darah(wait, df, i):
     isi_input_surveyjs(wait, "//*[@id='sq_101i']", df.loc[i, "diastol"])
     klik_kirim(wait)
 
-#==============================
+
+# TAB BELUM PEMERIKSAAN
+def klik_tab_belum_pemeriksaan(wait):
+
+    return simple_click(
+        wait,
+        (
+            By.XPATH,
+            "//div[contains(@class,'cursor-pointer') and contains(.,'Belum Pemeriksaan')]",
+        ),
+        "Tab Belum Pemeriksaan",
+    )
+
+
+# ==============================
 # PROSES SATU PASIEN
-#==============================
+# ==============================
 def proses_pasien(wait, df, i):
     nama = str(df.loc[i, "nama"]).upper()
-    log(f"\n===== PASIEN {i+1}/{len(df)} =====")
+    log(f"\n===== PASIEN {i + 1}/{len(df)} =====")
     log(f"👤 {nama}")
+
+    klik_tab_belum_pemeriksaan(wait)
 
     if not cari_pasien(wait, nama):
         log(f"⛔ Gagal cari: {nama}")
@@ -538,14 +604,17 @@ def proses_pasien(wait, df, i):
         return "not_found"
 
     if not klik_mulai(wait, nama):
-        log(f"⛔ Gagal klik Mulai")
+        log("⛔ Gagal klik Mulai")
         return "failed"
 
     time.sleep(2)
     klik_tombol(wait, "Mulai Pemeriksaan")
     for attempt in range(3):
-        if simple_click(wait, (By.XPATH, "//button[.//*[contains(normalize-space(), 'Simpan')]]"),
-                       "Simpan"):
+        if simple_click(
+            wait,
+            (By.XPATH, "//button[.//*[contains(normalize-space(), 'Simpan')]]"),
+            "Simpan",
+        ):
             break
         time.sleep(2)
     time.sleep(2)
@@ -578,14 +647,23 @@ def proses_pasien(wait, df, i):
     time.sleep(2)
     # Retry hanya untuk Selesaikan & Konfirmasi
     for attempt in range(3):
-        if simple_click(wait, (By.XPATH, "//button[.//*[contains(normalize-space(), 'Selesaikan Layanan')]]"),
-                       "Selesaikan Layanan"):
+        if simple_click(
+            wait,
+            (
+                By.XPATH,
+                "//button[.//*[contains(normalize-space(), 'Selesaikan Layanan')]]",
+            ),
+            "Selesaikan Layanan",
+        ):
             break
         time.sleep(2)
     time.sleep(2)
     for attempt in range(3):
-        if simple_click(wait, (By.XPATH, "//button[.//*[contains(normalize-space(), 'Konfirmasi')]]"),
-                       "Konfirmasi"):
+        if simple_click(
+            wait,
+            (By.XPATH, "//button[.//*[contains(normalize-space(), 'Konfirmasi')]]"),
+            "Konfirmasi",
+        ):
             break
         time.sleep(2)
     time.sleep(3)
@@ -594,9 +672,10 @@ def proses_pasien(wait, df, i):
     log(f"✅ Selesai: {nama}")
     return "success"
 
-#==============================
+
+# ==============================
 # MAIN
-#==============================
+# ==============================
 def main():
     driver, wait = init_browser()
     driver.get(WEBSITE_URL)
@@ -670,6 +749,7 @@ def main():
 
     log("\n✅ Bot selesai!")
     driver.quit()
+
 
 if __name__ == "__main__":
     main()

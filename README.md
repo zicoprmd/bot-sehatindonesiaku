@@ -111,4 +111,4 @@ PROGRESS_FILE = "progress.txt"
 
 ## Stop Bot
 
-Tekan `Ctrl+C` untuk interrupt. Bot akan berhenti dan progress tersimpan - bisa resume lain kali.
+Tekan `Ctrl+C` untuk interrupt. Bot akan berhenti dan progress tersimpan - bisa resume下次运行时.
